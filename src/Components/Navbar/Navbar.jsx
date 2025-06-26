@@ -8,7 +8,7 @@ const Navbar = () => {
         <li><NavLink to={'/about'}>About Us</NavLink></li>
     </>
     return (
-        <div className="navbar bg-base-100 shadow-sm mb-10">
+        <div className="navbar bg-base-100 shadow-sm py-4 lg:py-5 lg:px-7 mb-10">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
