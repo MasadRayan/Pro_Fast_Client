@@ -3,6 +3,8 @@ import Banner from '../../Components/Banner/Banner';
 import HowItWorks from '../../Components/HowItWorks/HowItWorks';
 import OurServices from '../../Components/OurServices/OurServices';
 import LogoMarquee from '../../Components/LogoMarquee/LogoMarquee';
+import FeatureSection from '../../Components/FeatureSection/FeatureSection';
+import SatisfactionSection from '../../Components/SatisfactionSection/SatisfactionSection';
 
 const Home = () => {
     return (
@@ -11,6 +13,8 @@ const Home = () => {
             <HowItWorks></HowItWorks>
             <OurServices></OurServices>
             <LogoMarquee></LogoMarquee>
+            <FeatureSection></FeatureSection>
+            <SatisfactionSection></SatisfactionSection>
         </div>
     );
 };
