@@ -9,7 +9,7 @@ const AuthLayout = () => {
             <div className="w-full absolute top-6 left-0 flex justify-center lg:justify-start z-10 px-6">
                 <Logo />
             </div>
-            <div className="flex flex-1 flex-col-reverse lg:flex-row items-center justify-center lg:justify-between  w-full relative z-0 mt-10 md:mt-0">
+            <div className="flex flex-1 flex-col-reverse lg:flex-row items-center justify-center lg:justify-between  w-full relative z-0 mt-25 md:mt-0">
                 <div className="w-full lg:flex-1 flex justify-center items-center py-16">
                     <Outlet />
                 </div>
