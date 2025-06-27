@@ -5,6 +5,7 @@ import OurServices from '../../Components/OurServices/OurServices';
 import LogoMarquee from '../../Components/LogoMarquee/LogoMarquee';
 import FeatureSection from '../../Components/FeatureSection/FeatureSection';
 import SatisfactionSection from '../../Components/SatisfactionSection/SatisfactionSection';
+import ReviewsSection from '../../Components/ReviewsSection/ReviewsSection';
 
 const Home = () => {
     return (
@@ -15,6 +16,7 @@ const Home = () => {
             <LogoMarquee></LogoMarquee>
             <FeatureSection></FeatureSection>
             <SatisfactionSection></SatisfactionSection>
+            <ReviewsSection></ReviewsSection>
         </div>
     );
 };
