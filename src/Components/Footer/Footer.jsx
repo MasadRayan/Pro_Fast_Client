@@ -9,9 +9,8 @@ const Footer = () => {
       <div className="w-[90vw] max-w-[1200px] rounded-2xl bg-neutral text-neutral-content px-8 py-10 flex flex-col items-center shadow-lg">
         {/* Logo and Brand */}
         <div className="flex flex-col items-center mb-5">
-          <Logo className="mb-2" />
-          <span className="text-3xl font-bold mb-2">Profast</span>
-          <p className="max-w-xl text-center text-base font-normal opacity-80">
+          <Logo className="mb-5" />
+          <p className="max-w-xl text-center text-base font-normal mt-5 opacity-80">
             Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.
           </p>
         </div>
@@ -19,7 +18,7 @@ const Footer = () => {
         <nav className="flex flex-wrap justify-center gap-8 my-6">
           <NavLink to={'/'} className="hover:text-primary transition">Home</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Services</NavLink>
-          <NavLink to={'/'} className="hover:text-primary transition">Coverage</NavLink>
+          <NavLink to={'/coverage'} className="hover:text-primary transition">Coverage</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">About Us</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Pricing</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Blog</NavLink>
