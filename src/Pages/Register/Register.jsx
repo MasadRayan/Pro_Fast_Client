@@ -1,13 +1,15 @@
 import { div } from 'framer-motion/client';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useAuth from '../../Hooks/useAuth';
 
 
 const Register = () => {
-    const { createUser, signInWithGoogle } = useAuth()
+    const { createUser, signInWithGoogle, setUser } = useAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
 
 
     const { register,
@@ -22,10 +24,12 @@ const Register = () => {
         createUser(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                setUser(user);
+                navigate(`${location.state ? location.state : '/'}`)
             })
             .catch((error) => {
                 const errorMessage = error.message;
-               
+
             });
 
     }
@@ -35,6 +39,15 @@ const Register = () => {
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
+            .then((userCredential) => {
+                const user = userCredential.user;
+                setUser(user);
+                navigate(`${location.state ? location.state : '/'}`)
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+
+            });
     }
 
     return (

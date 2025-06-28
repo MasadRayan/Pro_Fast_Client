@@ -6,6 +6,7 @@ import LogoMarquee from '../../Components/LogoMarquee/LogoMarquee';
 import FeatureSection from '../../Components/FeatureSection/FeatureSection';
 import SatisfactionSection from '../../Components/SatisfactionSection/SatisfactionSection';
 import ReviewsSection from '../../Components/ReviewsSection/ReviewsSection';
+import { ScrollRestoration } from 'react-router';
 
 const Home = () => {
     return (
@@ -17,6 +18,7 @@ const Home = () => {
             <FeatureSection></FeatureSection>
             <SatisfactionSection></SatisfactionSection>
             <ReviewsSection></ReviewsSection>
+            <ScrollRestoration></ScrollRestoration>
         </div>
     );
 };
