@@ -1,7 +1,10 @@
 import React from 'react';
 import BangladeshMap from '../../Components/BangladeshMap/BangladeshMap';
+import { ScrollRestoration, useLoaderData } from 'react-router';
 
 const Coverage = () => {
+    const outlets  = useLoaderData()
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-6">
@@ -15,9 +18,10 @@ const Coverage = () => {
 
             <div className="flex justify-center mb-6">
                 <div className="w-full max-w-6xl">
-                    <BangladeshMap></BangladeshMap>
+                    <BangladeshMap outlets={outlets}></BangladeshMap>
                 </div>
             </div>
+            <ScrollRestoration></ScrollRestoration>
         </div>
     );
 };
