@@ -6,6 +6,8 @@ import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import Coverage from "../Pages/Coverage/Coverage";
 import Loading from "../Components/Loading/Loading";
+import PrivateRoute from "../Routes/PrivateRoute";
+import SendParcel from "../Pages/SendParcel/SendParcel";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +21,14 @@ export const router = createBrowserRouter([
             {
                 path: 'coverage',
                 Component: Coverage,
+                loader: () => fetch('./outletData.json'),
+                hydrateFallbackElement: <Loading></Loading>
+            },
+            {
+                path: '/sendParcel',
+                element: <PrivateRoute>
+                    <SendParcel></SendParcel>
+                </PrivateRoute>,
                 loader: () => fetch('./outletData.json'),
                 hydrateFallbackElement: <Loading></Loading>
             }

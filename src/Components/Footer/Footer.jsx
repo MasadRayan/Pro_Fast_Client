@@ -17,7 +17,7 @@ const Footer = () => {
 
         <nav className="flex flex-wrap justify-center gap-8 my-6">
           <NavLink to={'/'} className="hover:text-primary transition">Home</NavLink>
-          <NavLink to={'/'} className="hover:text-primary transition">Services</NavLink>
+          <NavLink className='hover:text-primary transition' to={'/sendParcel'}>Send a Parcel</NavLink>
           <NavLink to={'/coverage'} className="hover:text-primary transition">Coverage</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">About Us</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Pricing</NavLink>
