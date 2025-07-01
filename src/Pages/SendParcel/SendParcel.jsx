@@ -3,12 +3,21 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import useAuth from '../../Hooks/useAuth';
 import { useLoaderData } from 'react-router';
-import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { FaCheckCircle, FaMoneyBillWave, FaEdit } from "react-icons/fa";
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
+const generateTrackingId = () => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+  return `TRK-${timestamp}-${random}`;
+};
 
 const SendParcel = () => {
-  const serviceCenter = useLoaderData()
+  const serviceCenter = useLoaderData();
+  const MySwal = withReactContent(Swal);
+  const axiosSecure = useAxiosSecure()
 
   // Helper function to get unique values by key
   const getUnique = (data, key) => [...new Set(data.map(item => item[key]))];
@@ -45,30 +54,85 @@ const SendParcel = () => {
     setValue('receiverServiceCenter', '');
   }, [receiverRegion, setValue]);
 
+
   const onSubmit = (data) => {
+    data.email = user.email;
+    data.createdAt = new Date().toISOString();
+    data.trackingStatus = "Pending Pickup";
+    data.paymentStatus = "Pending";
+
     let cost = 0;
+    let baseCost = 0;
+    let extraWeightCharge = 0;
+    let outsideDistrictExtra = 0;
     const isSameRegion = data.senderRegion === data.receiverRegion;
+    const weight = parseFloat(data.weight) || 0;
 
     if (data.parcelType === 'document') {
-      cost = isSameRegion ? 60 : 80;
+      baseCost = isSameRegion ? 60 : 80;
+      cost = baseCost;
     } else {
-      const weight = parseFloat(data.weight) || 0;
       if (weight <= 3) {
-        cost = isSameRegion ? 110 : 150;
+        baseCost = isSameRegion ? 110 : 150;
+        cost = baseCost;
       } else {
-        // base price + extra kg charges
         const extraKg = weight - 3;
-        const extraCharge = extraKg * 40;
-        cost = isSameRegion ? (110 + extraCharge) : (150 + extraCharge + 40);
+        extraWeightCharge = extraKg * 40;
+        baseCost = isSameRegion ? 110 : 150;
+        outsideDistrictExtra = isSameRegion ? 0 : 40;
+        cost = baseCost + extraWeightCharge + outsideDistrictExtra;
       }
     }
 
-    Swal.fire({
-      title: (`Booking Successful! You need to pay ৳${cost}.`),
-      icon: "success",
-      draggable: true
+    data.totalPrice = cost;
+    delete data.senderCity;
+    delete data.receiverCity;
+    delete data.senderServiceCenter;
+    delete data.receiverServiceCenter;
+    data.trackingId = generateTrackingId();
+
+    MySwal.fire({
+      title: <span className="flex items-center gap-2 text-green-600"><FaCheckCircle /> Booking Successful!</span>,
+      html: (
+        <div className="text-left space-y-2">
+          <p>📦 <strong>Parcel Type:</strong> {data.parcelType}</p>
+          <p>⚖️ <strong>Weight:</strong> {data.parcelType === 'document' ? 'Any' : `${weight} kg`}</p>
+          <p>📍 <strong>Region:</strong> {isSameRegion ? 'Within District' : 'Outside District'}</p>
+          <hr />
+          <p>💰 <strong>Base Charge:</strong> ৳{baseCost}</p>
+          {extraWeightCharge > 0 && (
+            <p>➕ <strong>Extra Weight:</strong> ৳{extraWeightCharge} ({(weight - 3).toFixed(2)} kg × ৳40)</p>
+          )}
+          {outsideDistrictExtra > 0 && (
+            <p>🚚 <strong>Outside District Charge:</strong> ৳{outsideDistrictExtra}</p>
+          )}
+          <hr />
+          <h3 className="text-green-600 text-xl font-bold flex items-center gap-2">
+            <FaMoneyBillWave /> Total: ৳{cost}
+          </h3>
+        </div>
+      ),
+      showCancelButton: true,
+      confirmButtonText: <span className="flex items-center gap-2"><FaMoneyBillWave /> Proceed to Payment</span>,
+      cancelButtonText: <span className="flex items-center gap-2"><FaEdit /> Edit</span>,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.post('/parcels', data)
+          .then(res => {
+            if(res.data.insertedId){
+              // redirect to the payment page
+            }
+          })
+          .catch(err => {
+            console.error("Error saving parcel:", err);
+          });
+      } else {
+        console.log('Back to editing...');
+      }
     });
   };
+
+
 
   return (
     <div className="max-w-5xl mx-auto p-6">
