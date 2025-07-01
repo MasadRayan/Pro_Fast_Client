@@ -148,7 +148,7 @@ const SendParcel = () => {
               <span className="label-text mr-2">Document</span>
               <input
                 type="radio"
-                value="document"
+                value="Document"
                 {...register("parcelType", { required: true })}
                 className="radio checked:bg-[#CAEB66]"
                 defaultChecked
@@ -158,7 +158,7 @@ const SendParcel = () => {
               <span className="label-text mr-2">Not-Document</span>
               <input
                 type="radio"
-                value="non-document"
+                value="Non-Document"
                 {...register("parcelType")}
                 className="radio checked:bg-[#CAEB66]"
               />
@@ -171,7 +171,7 @@ const SendParcel = () => {
             {...register("parcelTitle", { required: "Parcel name is required" })}
             className="input input-bordered w-full mb-4"
           />
-          {parcelType === 'non-document' && (
+          {parcelType === 'Non-Document' && (
             <input
               type="number"
               step="0.1"

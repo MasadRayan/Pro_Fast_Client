@@ -2,8 +2,10 @@ import React from 'react';
 import Logo from '../Logo/Logo';
 import { FaLinkedinIn, FaXTwitter, FaFacebookF, FaYoutube } from 'react-icons/fa6';
 import { NavLink } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
 
 const Footer = () => {
+  const {user} = useAuth()
   return (
     <footer className="w-full flex justify-center bg-neutral rounded-3xl mb-5 py-10">
       <div className="w-[90vw] max-w-[1200px] rounded-2xl bg-neutral text-neutral-content px-8 py-10 flex flex-col items-center shadow-lg">
@@ -19,6 +21,11 @@ const Footer = () => {
           <NavLink to={'/'} className="hover:text-primary transition">Home</NavLink>
           <NavLink className='hover:text-primary transition' to={'/sendParcel'}>Send a Parcel</NavLink>
           <NavLink to={'/coverage'} className="hover:text-primary transition">Coverage</NavLink>
+          {
+            user && <>
+            <NavLink to={'/dashboard'} className="hover:text-primary transition">Dashboard</NavLink>
+            </>
+          }
           <NavLink to={'/'} className="hover:text-primary transition">About Us</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Pricing</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Blog</NavLink>
