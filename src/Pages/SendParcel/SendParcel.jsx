@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import useAuth from '../../Hooks/useAuth';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { FaCheckCircle, FaMoneyBillWave, FaEdit } from "react-icons/fa";
@@ -17,7 +17,8 @@ const generateTrackingId = () => {
 const SendParcel = () => {
   const serviceCenter = useLoaderData();
   const MySwal = withReactContent(Swal);
-  const axiosSecure = useAxiosSecure()
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   // Helper function to get unique values by key
   const getUnique = (data, key) => [...new Set(data.map(item => item[key]))];
@@ -121,13 +122,14 @@ const SendParcel = () => {
           .then(res => {
             if(res.data.insertedId){
               // redirect to the payment page
+              navigate('/dashboard/myParcels')
             }
           })
           .catch(err => {
-            console.error("Error saving parcel:", err);
+            // console.error("Error saving parcel:", err);
           });
       } else {
-        console.log('Back to editing...');
+        // console.log('Back to editing...');
       }
     });
   };
