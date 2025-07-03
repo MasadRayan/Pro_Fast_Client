@@ -3,12 +3,17 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useAuth from '../../Hooks/useAuth';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import useAxios from '../../Hooks/useAxios';
 
 
 const Register = () => {
-    const { createUser, signInWithGoogle, setUser } = useAuth();
+    const { createUser, signInWithGoogle, setUser, updateUserProfile } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const [profilePic, setProfilePic] = useState('')
+    const axiosInstance = useAxios()
 
 
     const { register,
@@ -21,10 +26,32 @@ const Register = () => {
     const onSubmit = data => {
         const { email, password } = data;
         createUser(email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const user = userCredential.user;
-                setUser(user);
-                navigate(`${location.state ? location.state : '/'}`)
+
+                // update userinfo in the database
+                const userInfo = {
+                    email: data.email,
+                    name: data.name,
+                    role: 'user',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data);
+
+
+                // set image in the firebase
+                const userProfile = {
+                    displayName: data.name,
+                    photoURL: profilePic
+                }
+                updateUserProfile(userProfile)
+                    .then(() => {
+                        toast.success("Your Profile has been created")
+                        navigate(`${location.state ? location.state : '/'}`)
+                    })
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -32,21 +59,41 @@ const Register = () => {
             });
 
     }
+
     useEffect(() => {
         reset();
     }, []);
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const user = userCredential.user;
-                setUser(user);
+                const userInfo = {
+                    email: user.email,
+                    name: user.displayName,
+                    role: 'user',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data);
                 navigate(`${location.state ? location.state : '/'}`)
             })
             .catch((error) => {
                 const errorMessage = error.message;
 
             });
+    }
+
+    const handleImageUpload = async (e) => {
+        const image = e.target.files[0];
+        const formData = new FormData();
+        formData.append('image', image);
+
+        const imageURL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload}`
+
+        const res = await axios.post(imageURL, formData)
+        setProfilePic(res.data.data.url);
     }
 
     return (
@@ -57,6 +104,21 @@ const Register = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <fieldset className="fieldset">
 
+                    {/* name filed */}
+                    <label className="label">Your Name</label>
+                    <input type="text" {...register('name', {
+                        required: true
+                    })} className="input" required placeholder="Your Name" />
+
+                    {errors.email?.type === "required" && (
+                        <p className='text-red-400'>Name is required</p>
+                    )}
+
+                    {/* image filed */}
+                    <label className="label">Your Image</label>
+                    <input type="file" onChange={handleImageUpload} className="input" required placeholder="Your Image" />
+
+                    {/* email filed */}
                     <label className="label">Email</label>
                     <input type="email" {...register('email', {
                         required: true
@@ -66,6 +128,7 @@ const Register = () => {
                         <p className='text-red-400'>Email is required</p>
                     )}
 
+                    {/* password field */}
                     <label className="label">Password</label>
                     <div className='relative'>
                         <input

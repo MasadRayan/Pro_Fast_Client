@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { auth } from '../firebase/firebase.config';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 
 
 import { GoogleAuthProvider } from "firebase/auth";
+import { FaReacteurope } from 'react-icons/fa';
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -22,6 +23,10 @@ const AuthProvider = ({ children }) => {
     const signInUser = (email, password) => {
         setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
+    }
+
+    const updateUserProfile = userInfo => {
+        return updateProfile(auth.currentUser, userInfo);
     }
 
     const logOut = () => {
@@ -55,6 +60,7 @@ const AuthProvider = ({ children }) => {
         setLoading,
         logOut,
         signInWithGoogle,
+        updateUserProfile
         
     }
     return <AuthContext value={authData}>

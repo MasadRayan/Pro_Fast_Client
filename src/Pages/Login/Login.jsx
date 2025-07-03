@@ -3,12 +3,14 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useAuth from '../../Hooks/useAuth';
+import useAxios from '../../Hooks/useAxios';
 
 
 const Login = () => {
     const { signInWithGoogle, signInUser, setUser } = useAuth();
     const location = useLocation();
     const navigate = useNavigate()
+    const axiosInstance = useAxios()
 
 
     const { register,
@@ -40,10 +42,17 @@ const Login = () => {
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 const user = userCredential.user;
-                // console.log(user);
-                setUser(user);
+                const userInfo = {
+                    email: user.email,
+                    name: user.displayName,
+                    role: 'user',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data);
                 navigate(`${location.state ? location.state : '/'}`)
             })
             .catch((error) => {
