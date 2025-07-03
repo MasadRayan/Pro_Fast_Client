@@ -46,7 +46,7 @@ const Login = () => {
                 const user = userCredential.user;
                 const userInfo = {
                     email: user.email,
-                    name: user.displayName,
+                    displayName: user.displayName,
                     role: 'user',
                     createdAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString()

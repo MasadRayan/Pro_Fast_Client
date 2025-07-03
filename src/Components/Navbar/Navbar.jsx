@@ -19,6 +19,7 @@ const Navbar = () => {
                     <NavLink className='hover:bg-[#CAEB66] px-3 py-2 hover:rounded-lg block' to={'/dashboard'}>Dashboard</NavLink>
                 </>
             }
+            <NavLink className='hover:bg-[#CAEB66] px-3 py-2 hover:rounded-lg block' to={'/beARider'}>Be a Rider</NavLink>
             <NavLink className='hover:bg-[#CAEB66] px-3 py-2 hover:rounded-lg block' to={'/about'}>About Us</NavLink>
         </>
     );

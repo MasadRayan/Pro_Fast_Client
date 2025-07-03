@@ -24,7 +24,7 @@ const SendParcel = () => {
   const getUnique = (data, key) => [...new Set(data.map(item => item[key]))];
   const { user } = useAuth()
 
-  const { register, watch, setValue, handleSubmit, formState: { errors } } = useForm();
+  const { register, watch, setValue, reset, handleSubmit, formState: { errors } } = useForm();
 
   const parcelType = watch('parcelType', 'document');
 
@@ -132,6 +132,7 @@ const SendParcel = () => {
         // console.log('Back to editing...');
       }
     });
+    reset()
   };
 
 

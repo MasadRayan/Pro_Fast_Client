@@ -26,8 +26,8 @@ const Footer = () => {
             <NavLink to={'/dashboard'} className="hover:text-primary transition">Dashboard</NavLink>
             </>
           }
+          <NavLink to={'/beARider'} className="hover:text-primary transition">Be a Rider</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">About Us</NavLink>
-          <NavLink to={'/'} className="hover:text-primary transition">Pricing</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Blog</NavLink>
           <NavLink to={'/'} className="hover:text-primary transition">Contact</NavLink>
         </nav>

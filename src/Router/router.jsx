@@ -13,6 +13,7 @@ import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
+import BeARider from "../Pages/BeARider/BeARider";
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,14 @@ export const router = createBrowserRouter([
                 path: '/sendParcel',
                 element: <PrivateRoute>
                     <SendParcel></SendParcel>
+                </PrivateRoute>,
+                loader: () => fetch('./outletData.json'),
+                hydrateFallbackElement: <Loading></Loading>
+            },
+            {
+                path: 'beARider',
+                element: <PrivateRoute>
+                    <BeARider></BeARider>
                 </PrivateRoute>,
                 loader: () => fetch('./outletData.json'),
                 hydrateFallbackElement: <Loading></Loading>
