@@ -1,84 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { FiUser, FiMail, FiPhone, FiCreditCard, FiTruck, FiHash, FiMapPin, FiMap, FiCheckCircle, FiXCircle, FiEye } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { FiUser, FiMail, FiPhone, FiCreditCard, FiTruck, FiHash, FiMapPin, FiMap, FiCheckCircle, FiEye, FiMinusCircle } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../../Components/Loading/Loading';
 
-
-const PendingRider = () => {
+const ActiveRiders = () => {
     const axiosSecure = useAxiosSecure();
     const [selectedRider, setSelectedRider] = useState(null);
 
-    
-
-    const {isPending, data: riders =[], refetch} = useQuery({
-        queryKey: ['pending-riders'],
+    const { isPending, data: riders = [], refetch } = useQuery({
+        queryKey: ['active-riders'],
         queryFn: async () => {
-            const res = await  axiosSecure.get('/riders/pending');
-            return res.data
+            const res = await axiosSecure.get('/riders/approved');
+            return res.data;
         }
-    })
+    });
 
     if (isPending) {
-        return <Loading></Loading>
+        return <Loading />;
     }
 
-    const handleApprove = async (rider) => {
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: `Do you want to approve rider "${rider.name}"?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#22c55e', // lime-500
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve!'
-    });
+    const handleDeactivate = async (rider) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to deactivate rider "${rider.name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', // red-500
+            cancelButtonColor: '#6b7280',  // gray-500
+            confirmButtonText: 'Yes, deactivate!'
+        });
 
-    if (result.isConfirmed) {
-        try {
-            await axiosSecure.patch(`/riders/${rider._id}/approve`);
-            Swal.fire({
-                icon: 'success',
-                title: 'Rider Approved!',
-                timer: 1500,
-                showConfirmButton: false
-            });
-            refetch();
-        } catch (err) {
-            console.error(err);
+        if (result.isConfirmed) {
+            try {
+                await axiosSecure.patch(`/riders/${rider._id}/deactivate`);
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Rider Deactivated!',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                refetch();
+            } catch (err) {
+                console.error(err);
+            }
         }
-    }
-};
-
-const handleReject = async (rider) => {
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: `Do you want to reject and remove rider "${rider.name}"?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444', // red-500
-        cancelButtonColor: '#6b7280',  // gray-500
-        confirmButtonText: 'Yes, reject!'
-    });
-
-    if (result.isConfirmed) {
-        try {
-            await axiosSecure.delete(`/riders/${rider._id}`);
-            Swal.fire({
-                icon: 'info',
-                title: 'Rider Rejected & Removed!',
-                timer: 1500,
-                showConfirmButton: false
-            });
-            refetch();
-        } catch (err) {
-            console.error(err);
-        }
-    }
-};
-
+    };
 
     return (
         <>
@@ -88,7 +57,7 @@ const handleReject = async (rider) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <h2 className="text-3xl font-bold text-center text-primary mb-6">Pending Riders</h2>
+                <h2 className="text-3xl font-bold text-center text-primary mb-6">Active Riders</h2>
                 <table className="table w-full">
                     <thead>
                         <tr>
@@ -104,7 +73,18 @@ const handleReject = async (rider) => {
                     <tbody>
                         {riders.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="py-8 text-center text-gray-500">No pending riders found</td>
+                                <td colSpan="7" className="py-12 text-center">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="flex flex-col items-center space-y-4 text-gray-500"
+                                    >
+                                        <img src="https://illustrations.popsy.co/amber/shipping-box.svg" alt="No active riders" className="w-32" />
+                                        <p className="text-lg font-semibold">No active riders at the moment</p>
+                                        <p className="text-sm text-gray-400">Sit back and relax 🚀</p>
+                                    </motion.div>
+                                </td>
                             </tr>
                         ) : (
                             riders.map(rider => (
@@ -114,26 +94,20 @@ const handleReject = async (rider) => {
                                     <td>{rider.contact}</td>
                                     <td>{rider.bikeModel}</td>
                                     <td>{rider.district}</td>
-                                    <td><span className="badge badge-warning badge-outline">{rider.status}</span></td>
+                                    <td><span className="badge badge-success badge-outline">{rider.status}</span></td>
                                     <td>
                                         <div className="flex justify-center gap-2">
-                                            <button
-                                                onClick={() => handleApprove(rider)}
-                                                className="btn btn-xs btn-success flex items-center gap-1"
-                                            >
-                                                <FiCheckCircle /> Approve
-                                            </button>
-                                            <button
-                                                onClick={() => handleReject(rider)}
-                                                className="btn btn-xs btn-error flex items-center gap-1"
-                                            >
-                                                <FiXCircle /> Reject
-                                            </button>
                                             <button
                                                 onClick={() => setSelectedRider(rider)}
                                                 className="btn btn-xs btn-info flex items-center gap-1"
                                             >
                                                 <FiEye /> View
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeactivate(rider)}
+                                                className="btn btn-xs btn-warning flex items-center gap-1"
+                                            >
+                                                <FiMinusCircle /> Deactivate
                                             </button>
                                         </div>
                                     </td>
@@ -184,7 +158,7 @@ const handleReject = async (rider) => {
                             </p>
                             <p className="flex items-center gap-2 hover:bg-base-200 p-2 rounded">
                                 <FiCheckCircle className="text-primary" /> <strong>Status:</strong>
-                                <span className="badge badge-warning badge-outline">{selectedRider.status}</span>
+                                <span className="badge badge-success badge-outline">{selectedRider.status}</span>
                             </p>
                         </div>
 
@@ -203,4 +177,4 @@ const handleReject = async (rider) => {
     );
 };
 
-export default PendingRider;
+export default ActiveRiders;

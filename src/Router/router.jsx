@@ -15,6 +15,7 @@ import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 import BeARider from "../Pages/BeARider/BeARider";
 import PendingRider from "../Pages/Dashboard/PendingRider/PendingRider";
+import ActiveRiders from "../Pages/Dashboard/ActiveRiders/ActiveRiders";
 
 export const router = createBrowserRouter([
     {
@@ -46,7 +47,8 @@ export const router = createBrowserRouter([
                 </PrivateRoute>,
                 loader: () => fetch('./outletData.json'),
                 hydrateFallbackElement: <Loading></Loading>
-            }
+            },
+            
         ]
     },
     {
@@ -88,6 +90,10 @@ export const router = createBrowserRouter([
             {
                 path: 'pendingRider',
                 Component: PendingRider,
+            },
+            {
+                path: 'activeRider',
+                Component: ActiveRiders,
             }
         ]
     }
