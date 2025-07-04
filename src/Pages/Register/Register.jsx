@@ -15,7 +15,7 @@ const Register = () => {
     const [profilePic, setProfilePic] = useState('')
     const axiosInstance = useAxios()
 
-
+    console.log(location.state);
     const { register,
         handleSubmit,
         reset,
@@ -49,8 +49,8 @@ const Register = () => {
                 }
                 updateUserProfile(userProfile)
                     .then(() => {
+                        navigate(location.state?.from?.pathname || '/');
                         toast.success("Your Profile has been created")
-                        navigate(`${location.state ? location.state : '/'}`)
                     })
             })
             .catch((error) => {
@@ -77,13 +77,16 @@ const Register = () => {
                 }
                 const userRes = await axiosInstance.post('/users', userInfo);
                 console.log(userRes.data);
-                navigate(`${location.state ? location.state : '/'}`)
+
+                navigate(location.state?.from?.pathname || '/');
+                toast.success("Your Profile has been created")
             })
             .catch((error) => {
                 const errorMessage = error.message;
-
+                console.error(errorMessage);
             });
     }
+
 
     const handleImageUpload = async (e) => {
         const image = e.target.files[0];
