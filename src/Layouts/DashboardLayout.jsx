@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router';
 import Logo from '../Components/Logo/Logo';
-import { FiHome, FiBox, FiCreditCard, FiMapPin, FiUser, FiCheckCircle, FiClock } from 'react-icons/fi';
+import { FiHome, FiBox, FiCreditCard, FiMapPin, FiUser, FiCheckCircle, FiClock, FiShield } from 'react-icons/fi';
 
 
 const DashboardLayout = () => {
@@ -124,6 +124,19 @@ const DashboardLayout = () => {
                             <FiClock className="text-xl" /> Pending Rider
                         </NavLink>
                     </li>
+
+                    <li>
+                        <NavLink
+                            to={'/dashboard/makeAdmin'}
+                            className={({ isActive }) =>
+                                `flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-base-300 ${isActive ? 'bg-base-300 text-primary' : ''
+                                }`
+                            }
+                        >
+                            <FiShield className="text-xl" /> Make Admin
+                        </NavLink>
+                    </li>
+
                 </ul>
             </div>
             <ScrollRestoration></ScrollRestoration>

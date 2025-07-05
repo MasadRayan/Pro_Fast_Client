@@ -11,12 +11,12 @@ const PendingRider = () => {
     const axiosSecure = useAxiosSecure();
     const [selectedRider, setSelectedRider] = useState(null);
 
-    
 
-    const {isPending, data: riders =[], refetch} = useQuery({
+
+    const { isPending, data: riders = [], refetch } = useQuery({
         queryKey: ['pending-riders'],
         queryFn: async () => {
-            const res = await  axiosSecure.get('/riders/pending');
+            const res = await axiosSecure.get('/riders/pending');
             return res.data
         }
     })
@@ -25,59 +25,60 @@ const PendingRider = () => {
         return <Loading></Loading>
     }
 
-    const handleApprove = async (rider) => {
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: `Do you want to approve rider "${rider.name}"?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#22c55e', // lime-500
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve!'
-    });
+    const handleStatusChange = async (rider, status) => {
+        const email = rider.email;  // grab it directly from the rider object
+        console.log("Will update rider status. Email:", email);
 
-    if (result.isConfirmed) {
-        try {
-            await axiosSecure.patch(`/riders/${rider._id}/approve`);
-            Swal.fire({
-                icon: 'success',
-                title: 'Rider Approved!',
-                timer: 1500,
-                showConfirmButton: false
-            });
-            refetch();
-        } catch (err) {
-            console.error(err);
+        let confirmText = '';
+        let confirmButtonColor = '';
+        let confirmButtonText = '';
+
+        if (status === 'approved') {
+            confirmText = `Do you want to approve rider "${rider.name}"?`;
+            confirmButtonColor = '#22c55e';
+            confirmButtonText = 'Yes, approve!';
+        } else if (status === 'rejected') {
+            confirmText = `Do you want to reject and remove rider "${rider.name}"?`;
+            confirmButtonColor = '#ef4444';
+            confirmButtonText = 'Yes, reject!';
+        } else {
+            confirmText = `Do you want to update rider "${rider.name}" to status "${status}"?`;
+            confirmButtonColor = '#3b82f6';
+            confirmButtonText = 'Yes, update!';
         }
-    }
-};
 
-const handleReject = async (rider) => {
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: `Do you want to reject and remove rider "${rider.name}"?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444', // red-500
-        cancelButtonColor: '#6b7280',  // gray-500
-        confirmButtonText: 'Yes, reject!'
-    });
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: confirmText,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor,
+            cancelButtonColor: '#6b7280',
+            confirmButtonText
+        });
 
-    if (result.isConfirmed) {
-        try {
-            await axiosSecure.delete(`/riders/${rider._id}`);
-            Swal.fire({
-                icon: 'info',
-                title: 'Rider Rejected & Removed!',
-                timer: 1500,
-                showConfirmButton: false
-            });
-            refetch();
-        } catch (err) {
-            console.error(err);
+        if (result.isConfirmed) {
+            try {
+                await axiosSecure.patch(`/riders/${rider._id}/status`, { status, email });
+                Swal.fire({
+                    icon: 'success',
+                    title: `Rider ${status.charAt(0).toUpperCase() + status.slice(1)}!`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                refetch();
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to update status',
+                    text: err.response?.data?.message || err.message
+                });
+            }
         }
-    }
-};
+    };
+
+
 
 
     return (
@@ -118,13 +119,14 @@ const handleReject = async (rider) => {
                                     <td>
                                         <div className="flex justify-center gap-2">
                                             <button
-                                                onClick={() => handleApprove(rider)}
+                                                onClick={() => handleStatusChange(rider, 'approved')}
                                                 className="btn btn-xs btn-success flex items-center gap-1"
                                             >
                                                 <FiCheckCircle /> Approve
                                             </button>
+
                                             <button
-                                                onClick={() => handleReject(rider)}
+                                                onClick={() => handleStatusChange(rider, 'rejected')}
                                                 className="btn btn-xs btn-error flex items-center gap-1"
                                             >
                                                 <FiXCircle /> Reject

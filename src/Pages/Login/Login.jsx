@@ -21,14 +21,13 @@ const Login = () => {
     const [showPass, setShowPass] = useState(false);
 
     const onSubmit = data => {
-        console.log(data);
         const { email, password } = data;
         signInUser(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 // console.log(user);
                 setUser(user);
-                navigate(`${location.state ? location.state : '/'}`)
+                navigate(location.state?.from?.pathname || '/');
 
             })
             .catch((error) => {
@@ -53,7 +52,7 @@ const Login = () => {
                 }
                 const userRes = await axiosInstance.post('/users', userInfo);
                 console.log(userRes.data);
-                navigate(`${location.state ? location.state : '/'}`)
+                navigate(location.state?.from?.pathname || '/');
             })
             .catch((error) => {
                 const errorMessage = error.message;
