@@ -9,6 +9,7 @@ import ReviewsSection from '../../Components/ReviewsSection/ReviewsSection';
 import { ScrollRestoration } from 'react-router';
 
 const Home = () => {
+   
     return (
         <div className='my-10'>
             <Banner></Banner>

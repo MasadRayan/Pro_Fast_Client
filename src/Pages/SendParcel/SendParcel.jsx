@@ -88,8 +88,6 @@ const SendParcel = () => {
     data.totalPrice = cost;
     delete data.senderCity;
     delete data.receiverCity;
-    delete data.senderServiceCenter;
-    delete data.receiverServiceCenter;
     data.trackingId = generateTrackingId();
 
     MySwal.fire({
