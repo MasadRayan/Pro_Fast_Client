@@ -7,8 +7,8 @@ export default function useUserRole() {
   const axiosSecure = useAxiosSecure();
 
   const query = useQuery({
-    queryKey: ['userRole', user?.email],     // <--- queryKey here
-    queryFn: async () => {                    // <--- queryFn here
+    queryKey: ['userRole', user?.email],     
+    queryFn: async () => {                   
       if (!user || !user.email) {
         return 'user';
       }

@@ -17,6 +17,8 @@ import BeARider from "../Pages/BeARider/BeARider";
 import PendingRider from "../Pages/Dashboard/PendingRider/PendingRider";
 import ActiveRiders from "../Pages/Dashboard/ActiveRiders/ActiveRiders";
 import MakeAdmin from "../Pages/Dashboard/MakeAdmin/MakeAdmin";
+import AdminRoute from "../Routes/AdminRoute";
+import Forbidden from "../Components/Forbidden/Forbidden";
 
 export const router = createBrowserRouter([
     {
@@ -32,6 +34,10 @@ export const router = createBrowserRouter([
                 Component: Coverage,
                 loader: () => fetch('./outletData.json'),
                 hydrateFallbackElement: <Loading></Loading>
+            },
+            {
+                path: 'forbidden',
+                Component: Forbidden
             },
             {
                 path: '/sendParcel',
@@ -90,15 +96,21 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'pendingRider',
-                Component: PendingRider,
+                element: <AdminRoute>
+                    <PendingRider></PendingRider>
+                </AdminRoute>
             },
             {
                 path: 'activeRider',
-                Component: ActiveRiders,
+                element: <AdminRoute>
+                    <ActiveRiders></ActiveRiders>
+                </AdminRoute>
             },
             {
                 path: 'makeAdmin',
-                Component: MakeAdmin
+                element: <AdminRoute>
+                    <MakeAdmin></MakeAdmin>
+                </AdminRoute>
             }
         ]
     }
