@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router';
 import Logo from '../Components/Logo/Logo';
 import { FiHome, FiBox, FiCreditCard, FiMapPin, FiUser, FiCheckCircle, FiClock, FiShield, FiUserPlus } from 'react-icons/fi';
 import useUserRole from '../Hooks/useUserRole';
-import { FaMotorcycle } from 'react-icons/fa6';
+import { FaClock, FaMotorcycle } from 'react-icons/fa6';
 
 
 const DashboardLayout = () => {
@@ -108,8 +108,26 @@ const DashboardLayout = () => {
                             <FiUser className="text-xl" /> Update Profile
                         </NavLink>
                     </li>
-
                     {/* rider links */}
+                    {
+                        !roleLoading && role === 'rider' &&
+                        <>
+                            <li>
+                                <NavLink
+                                    to={'/dashboard/pendingDelivery'}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-base-300 ${isActive ? 'bg-base-300 text-primary' : ''
+                                        }`
+                                    }
+                                >
+                                    <FaClock className="text-xl" /> Pending Delivery
+                                </NavLink>
+                            </li>
+
+                        </>
+                    }
+
+                    {/* admin links */}
                     {!roleLoading && role === 'admin' &&
                         <>
 
