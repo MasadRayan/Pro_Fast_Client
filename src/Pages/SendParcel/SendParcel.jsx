@@ -112,7 +112,7 @@ const SendParcel = () => {
         </div>
       ),
       showCancelButton: true,
-      confirmButtonText: <span className="flex items-center gap-2"><FaMoneyBillWave /> Proceed to Payment</span>,
+      confirmButtonText: <span className="flex items-center gap-2"><FaMoneyBillWave /> All of my parcels</span>,
       cancelButtonText: <span className="flex items-center gap-2"><FaEdit /> Edit</span>,
     }).then((result) => {
       if (result.isConfirmed) {

@@ -43,15 +43,15 @@ export default function AssignRider() {
   });
 
   const parcelMutation = useMutation({
-    mutationFn: ({ parcelId, deliveryStatus }) =>
-      axiosSecure.patch(`/parcels/${parcelId}/delivery-status`, { deliveryStatus }),
+    mutationFn: ({ parcelId, updateData }) =>
+      axiosSecure.patch(`/parcels/${parcelId}/update`, updateData),
     onSuccess: () => {
       queryClient.invalidateQueries(['assignRiderParcels']);
     }
   });
 
   // 📌 Derived matching riders
-  const matchingRiders = selectedParcel 
+  const matchingRiders = selectedParcel
     ? riders.filter(r => r.district.toLowerCase() === selectedParcel.senderServiceCenter.toLowerCase())
     : [];
 
@@ -67,7 +67,15 @@ export default function AssignRider() {
       {
         onSuccess: () => {
           parcelMutation.mutate(
-            { parcelId: selectedParcel._id, deliveryStatus: 'in-transit' },
+            {
+              parcelId: selectedParcel._id,
+              updateData: {
+                deliveryStatus: 'rider_assigned',
+                riderId: rider._id,
+                riderName: rider.name,
+                riderEmail: rider.email
+              }
+            },
             {
               onSuccess: () => {
                 Swal.fire('Success', `Assigned ${rider.name} to "${selectedParcel.parcelTitle}"`, 'success');
@@ -75,7 +83,7 @@ export default function AssignRider() {
                 document.getElementById('assignModal').close();
               },
               onError: () => {
-                Swal.fire('Error', 'Failed to update parcel status', 'error');
+                Swal.fire('Error', 'Failed to update parcel info', 'error');
               }
             }
           );
@@ -87,11 +95,12 @@ export default function AssignRider() {
     );
   };
 
+
   if (parcelsLoading) return <p className="p-4 text-center">Loading parcels...</p>;
   if (error) return <p className="p-4 text-center text-red-500">Error loading parcels</p>;
 
   return (
-    <motion.div 
+    <motion.div
       className="p-6 max-w-7xl mx-auto"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
