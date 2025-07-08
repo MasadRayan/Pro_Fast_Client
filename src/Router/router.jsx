@@ -22,6 +22,7 @@ import Forbidden from "../Components/Forbidden/Forbidden";
 import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
 import RiderRoute from "../Routes/RiderRoute";
 import PendingDelivary from "../Pages/Dashboard/PendingDelivary/PendingDelivary";
+import CompletedDelivary from "../Pages/Dashboard/CompletedDelivary/CompletedDelivary";
 
 export const router = createBrowserRouter([
     {
@@ -104,7 +105,12 @@ export const router = createBrowserRouter([
                     <PendingDelivary></PendingDelivary>
                 </RiderRoute>
             },
-
+            {
+                path: 'completedDelivery',
+                element: <RiderRoute>
+                    <CompletedDelivary></CompletedDelivary>
+                </RiderRoute>
+            },
 
             // Admin only routes
             {
